@@ -11,6 +11,7 @@ import org.scion.jpan.Scion;
 import org.scion.jpan.ScionService;
 import org.scion.jpan.ScionUtil;
 import org.scion.jpan.ScmpSenderAsync;
+import org.xbill.DNS.NioClient;
 
 public final class JpanScmpPing {
   private static final long DST_IA = ScionUtil.parseIA("64-2:0:9c");
@@ -44,6 +45,11 @@ public final class JpanScmpPing {
       e.printStackTrace(System.err);
     } finally {
       Scion.closeDefault();
+      try {
+        NioClient.close();
+      } catch (Throwable ignored) {
+        // Best-effort cleanup for exec:java classloader shutdown.
+      }
     }
   }
 
